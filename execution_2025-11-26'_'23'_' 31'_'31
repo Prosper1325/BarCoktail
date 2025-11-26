@@ -1,0 +1,5 @@
+2025-11-26 23:31:31,671 - INFO - [Serveur] le temps d'execution de prendre commande est 0.0047948360443115234
+2025-11-26 23:31:31,672 - INFO - [Pic] le temps d'execution de liberer est 0.005470991134643555
+2025-11-26 23:31:31,672 - INFO - [Barman] le temps d'execution de préparer est 0.005771160125732422
+2025-11-26 23:31:31,672 - INFO - [Bar] le temps d'execution d'evacuer est 0.006036520004272461
+2025-11-26 23:31:31,672 - INFO - [Serveur] le temps d'execution de servir est 0.00626063346862793

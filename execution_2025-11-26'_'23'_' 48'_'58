@@ -1,0 +1,32 @@
+2025-11-26 23:49:01,583 - DEBUG - Using proactor: IocpProactor
+2025-11-26 23:49:01,588 - DEBUG - Using proactor: IocpProactor
+2025-11-26 23:49:01,591 - INFO - [Pic] le temps d'execution d'embrocher est 2.9051291942596436
+2025-11-26 23:49:01,592 - INFO - [Serveur] le temps d'execution de prendre commande est 2.906031608581543
+2025-11-26 23:49:01,728 - INFO - [Bar] le temps d'execution de recevoir est 3.042022466659546
+2025-11-26 23:49:01,728 - INFO - [Barman] le temps d'execution de préparer est 3.042459011077881
+2025-11-26 23:49:01,768 - INFO - [Serveur] le temps d'execution de servir est 3.0818755626678467
+2025-11-26 23:49:01,770 - INFO - [Barman] le temps d'execution de encaisser est 3.083991050720215
+2025-11-26 23:49:02,010 - INFO - [Pic] le temps d'execution d'embrocher est 3.322871685028076
+2025-11-26 23:49:02,011 - INFO - [Serveur] le temps d'execution de prendre commande est 3.3250648975372314
+2025-11-26 23:49:02,429 - INFO - [Pic] le temps d'execution d'embrocher est 3.7425074577331543
+2025-11-26 23:49:02,430 - INFO - [Serveur] le temps d'execution de prendre commande est 3.7443134784698486
+2025-11-26 23:49:02,746 - INFO - [Bar] le temps d'execution de recevoir est 4.060258865356445
+2025-11-26 23:49:02,747 - INFO - [Barman] le temps d'execution de préparer est 4.060977935791016
+2025-11-26 23:49:02,918 - INFO - [Pic] le temps d'execution d'embrocher est 4.231576204299927
+2025-11-26 23:49:02,918 - INFO - [Serveur] le temps d'execution de prendre commande est 4.2319536209106445
+2025-11-26 23:49:03,348 - INFO - [Serveur] le temps d'execution de servir est 4.66236686706543
+2025-11-26 23:49:03,353 - INFO - [Serveur] le temps d'execution de prendre commande est 4.667302370071411
+2025-11-26 23:49:03,354 - INFO - [Barman] le temps d'execution de encaisser est 4.667848110198975
+2025-11-26 23:49:03,760 - INFO - [Bar] le temps d'execution de recevoir est 5.074052810668945
+2025-11-26 23:49:03,761 - INFO - [Barman] le temps d'execution de préparer est 5.075263977050781
+2025-11-26 23:49:04,932 - INFO - [Serveur] le temps d'execution de servir est 6.2455408573150635
+2025-11-26 23:49:04,934 - INFO - [Barman] le temps d'execution de encaisser est 6.248302936553955
+2025-11-26 23:49:04,936 - INFO - [Bar] le temps d'execution de recevoir est 6.249817609786987
+2025-11-26 23:49:04,936 - INFO - [Barman] le temps d'execution de préparer est 6.250005722045898
+2025-11-26 23:49:06,514 - INFO - [Serveur] le temps d'execution de servir est 7.827508449554443
+2025-11-26 23:49:06,517 - INFO - [Barman] le temps d'execution de encaisser est 7.831398963928223
+2025-11-26 23:49:06,518 - INFO - [Pic] le temps d'execution de liberer est 7.831916809082031
+2025-11-26 23:49:06,518 - INFO - [Barman] le temps d'execution de préparer est 7.8322594165802
+2025-11-26 23:49:07,528 - INFO - [Barman] le temps d'execution de encaisser est 8.842188119888306
+2025-11-26 23:49:08,028 - INFO - [Bar] le temps d'execution d'evacuer est 9.342142820358276
+2025-11-26 23:49:08,029 - INFO - [Serveur] le temps d'execution de servir est 9.342845916748047
