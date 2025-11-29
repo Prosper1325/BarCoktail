@@ -59,6 +59,11 @@ Pic : pile LIFO pour empiler les post‑it (méthodes embrocher/liberer).
 Bar : zone de dépôt des boissons prêtes (méthodes recevoir/evacuer).
 Serveur : thread qui exécute un loop asyncio pour prendre les commandes et servir.
 Barman : thread qui exécute un loop asyncio pour préparer et encaisser.
+
+
+Pour accéder au contenu du fichier log: Get-Content .\borabora.log -Wait ( commande windows)
+
+
 Remarques techniques :
 
 Le code mélange threading.Thread et asyncio (chaque thread lance son propre asyncio.run()).

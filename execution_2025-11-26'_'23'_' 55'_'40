@@ -1,6 +1,0 @@
-2025-11-26 23:55:40,564 - DEBUG - Using proactor: IocpProactor
-2025-11-26 23:55:40,574 - INFO - [Serveur] le temps d'execution de prendre commande est 0.010570287704467773
-2025-11-26 23:55:40,575 - INFO - [Pic] le temps d'execution de liberer est 0.011362552642822266
-2025-11-26 23:55:40,575 - INFO - [Barman] le temps d'execution de préparer est 0.011750936508178711
-2025-11-26 23:55:40,575 - INFO - [Bar] le temps d'execution d'evacuer est 0.012162208557128906
-2025-11-26 23:55:40,576 - INFO - [Serveur] le temps d'execution de servir est 0.012522459030151367

@@ -1,0 +1,20 @@
+[alice] prêt pour prendre une nouvelle commande...
+[alice] j'ai la commande '['tequila sunrise', 'margarita']'
+[alice] j'écris sur le post-it '['tequila sunrise', 'margarita']'
+[prosper] prêt pour prendre une nouvelle commande...
+[prosper] j'ai la commande '['daiquiri', 'ti-punch']'
+[prosper] j'écris sur le post-it '['daiquiri', 'ti-punch']'
+[bob] je commence la fabrication de '['daiquiri', 'ti-punch']'
+[bob] je prépare 'daiquiri'
+[bob] je prépare 'ti-punch'
+[bob] la commande ['daiquiri', 'ti-punch'] est prête
+[bob] je commence la fabrication de '['tequila sunrise', 'margarita']'
+[bob] je prépare 'tequila sunrise'
+[bob] je prépare 'margarita'
+[bob] la commande ['tequila sunrise', 'margarita'] est prête
+[bob] je sers directement '['daiquiri', 'ti-punch']'
+[bob] je prépare et sers 'daiquiri'
+[bob] je prépare et sers 'ti-punch'
+[bob] je sers directement '['tequila sunrise', 'margarita']'
+[bob] je prépare et sers 'tequila sunrise'
+[bob] je prépare et sers 'margarita'
