@@ -109,14 +109,14 @@ venv\Scripts\activate         # Windows
 
 Utilisation
 
-Le script principal est : BAR_ASYNCRO.py
+Le script principal à exécuter  est : BAR.py
 
 En effet pour comprendre chaque étape du projet il faut exécuter tous les codes par ordre; par exemple le script BAR_REFAIT1_2.py  est le code de la partie I n°2 du projet, BAR_REFAIT3_1.py est le code de la partie III n°1 du projet.
 
 
 Il s’exécute avec un fichier listant des commandes clients :
 
-python BAR_ASYNCRO.py commandes.txt
+python BAR.py commandes.txt
 
 📄 Exemple de format du fichier clients
 3 mojito,bierre
