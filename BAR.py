@@ -1,136 +1,172 @@
 #!/bin/env python3
-from abc import ABC, abstractmethod
 
+import asyncio
 import sys
-import  time
-import datetime
-import logging
+import time
+import re
 
-# Obtenez l'heure actuelle
-maintenant = datetime.datetime.now()
-# Extrayez l'heure, les minutes et les secondes
-heure = maintenant.hour
-minute = maintenant.minute
-seconde = maintenant.second
+# -------------------- Fichier de log --------------------
+logfile = "fichier_async.log"
+logf = open(logfile, "w", encoding="utf-8")
 
-logging.basicConfig(filename=f"execution_{datetime.date.today()}'_'{heure}'_' {minute}'_'{seconde}",
-                    level=logging.DEBUG,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+# -------------------- Logable --------------------
 
+class Logable:
+    def __init__(self, name, verbose=True):
+        self.name = name
+        self.verbose = verbose
 
-dateactuale=time.time()
-class Accessoire(ABC):
-    def __init__(self) : 
-      self.liste=[]
-      self.etat=[]
+    def log(self, msg):
+        if self.verbose:
+            print(f"[{self.name}] {msg}", flush=True)
+            print(f"[{self.name}] {msg}", file=logf, flush=True)
 
-class Pic(Accessoire):
-    
-    """ Un pic peut embrocher un post-it par-dessus les post-it déjà présents
-        et libérer le dernier embroché. """
-    def __init__(self):
-        super().__init__()
-    def embrocher(self,postit):
-        print(f"[{self.__class__.__name__}] post-it '{postit}' embroché")
-        self.liste.append(postit)
-        self.etat.append(postit)
-        print(f"[{self.__class__.__name__}] état={self.etat}")
-        logging.info(f"[{self.__class__.__name__}] le temps d'execution d'embrocher est {time.time()-dateactuale}")
-    def liberer(self, index):
-        if not index:
-           print(f"[{self.__class__.__name__}] état={self.etat}")
-           postit = self.liste.pop()
-           self.etat.remove(postit)
-           print(f"[{self.__class__.__name__}] post-it '{postit}' libéré " )
-           return postit
-        else:
-            print(f"[{self.__class__.__name__}] état={self.etat}")
-        logging.info(f"[{self.__class__.__name__}] le temps d'execution de liberer est {time.time()-dateactuale}")
-            
-        
-    
-class Bar(Accessoire):
-   
-    """ Un bar peut recevoir des plateaux, et évacuer le dernier reçu """
-    def __init__(self):
-        super().__init__()
-    def recevoir(self,plateau):
-        self.etat.append(plateau)
-        print(f"[{self.__class__.__name__}]  '{plateau}' reçu" )
-        self.liste.append(plateau)
-        print(f"[{self.__class__.__name__}] état={self.etat}")
-        logging.info(f"[{self.__class__.__name__}] le temps d'execution de recevoir est {time.time()-dateactuale}")
-    def evacuer(self, index):
-        if not index:
-           print(f"[{self.__class__.__name__}]  état={self.etat}")
-           plateau = self.liste.pop()
-           print(f"[{self.__class__.__name__}]  '{plateau}' évacué")
-           self.etat.remove(plateau)
-           return plateau
-        else:
-            print(f"[{self.__class__.__name__}]  état={self.etat}")
-        logging.info(f"[{self.__class__.__name__}] le temps d'execution d'evacuer est {time.time()-dateactuale}")
-    
-class Serveur:
-    def __init__(self,Pic,Bar,commandes):
-        self.pic=Pic
-        self.bar=Bar
-        self.commandes=commandes
-    def prendre_commande(self):
-        """ Prend une commande et embroche un post-it. """
+# -------------------- Accessoires --------------------
 
-        print(f"[{self.__class__.__name__}] je suis pret pour le service")
-        commandes=list(reversed(self.commandes))
-        for i in range(len(commandes)):
-            print(f"[{self.__class__.__name__}] je prends commande de '{commandes[i]}'")
-            self.pic.embrocher(commandes[i])
+class Pic(Logable):
+    def __init__(self, name, verbose=True):
+        super().__init__(name, verbose)
+        self.queue = asyncio.LifoQueue()
 
-        print(f"[{self.__class__.__name__}] il n'y a plus de commande à prendre")
-        print("plus de commande à prendre")
+    async def embrocher(self, postit):
+        await self.queue.put(postit)
+        self.log(f"post-it '{postit}' embrochée, {self.queue.qsize()} post-it(s) à traiter")
 
-        logging.info(f"[{self.__class__.__name__}] le temps d'execution de prendre commande est {time.time()-dateactuale}")
+    async def liberer(self):
+        if self.queue.empty():
+            return None
+        postit = await self.queue.get()
+        self.log(f"post-it '{postit}' libéré, {self.queue.qsize()} post-it(s) à traiter")
+        return postit
 
+class Bar(Logable):
+    def __init__(self, name, verbose=True):
+        super().__init__(name, verbose)
+        self.queue = asyncio.Queue()
 
-    def servir(self):
-        """ Prend un plateau sur le bar. """
-        n=len(self.bar.liste)
-        liste=list(reversed(self.bar.liste))
-        for i in range(n):
-            self.bar.evacuer(False)
-            print(f" [{self.__class__.__name__}] je sers '{liste[i]}'")
-        self.bar.evacuer(True)  
-        print(" Bar est vide")
-        logging.info(f"[{self.__class__.__name__}] le temps d'execution de servir est {time.time()-dateactuale}")
+    async def recevoir(self, commande):
+        await self.queue.put(commande)
+        self.log(f"'{commande}' posée, {self.queue.qsize()} commande(s) à servir")
 
-class Barman:
-    def __init__(self,Pic,Bar):
-        print(f" [{self.__class__.__name__}] je suis pret pour le service ")
-        self.pic=Pic
-        self.bar=Bar
-    
-    def preparer(self):          
-        """ Prend un post-it, prépare la commande et la dépose sur le bar. """
-        n=len(self.pic.liste)
-        
-        for i in range(n):
+    async def evacuer(self):
+        if self.queue.empty():
+            return None
+        commande = await self.queue.get()
+        self.log(f"'{commande}' évacuée, {self.queue.qsize()} commande(s) à servir")
+        return commande
 
-            postit = self.pic.liberer(index=False)
-            print(f" [{self.__class__.__name__}] je commence la fabrication '{postit}' ")
-            
-            print(f" [{self.__class__.__name__}] je termine la fabrication '{postit}' ")
+# -------------------- Clients --------------------
 
-            self.bar.recevoir(postit)
-        self.pic.liberer(index=True)
-        print("Pic est vide")
-        logging.info(f"[{self.__class__.__name__}] le temps d'execution de préparer est {time.time()-dateactuale}")
+class Clients:
+    def __init__(self, fname):
+        self.commandes = []
+        start = time.time()
+        fmt = re.compile(r"(\d+)\s+(.*)")
+        with open(fname, "r", encoding="utf-8") as f:
+            for line in f:
+                found = fmt.search(line)
+                if found:
+                    when = int(found.group(1))
+                    what = found.group(2)
+                    self.commandes.append((start + when, what.split(",")))
+        self.commandes = self.commandes[::-1]
+
+    async def commande(self):
+        if len(self.commandes) == 0:
+            return None
+        while True:
+            if time.time() >= self.commandes[-1][0]:
+                return self.commandes.pop()[1]
+            await asyncio.sleep(0.05)
+
+# -------------------- Employés --------------------
+
+class Employe(Logable):
+    def __init__(self, pic, bar, clients, name, verbose=True, productivity=1.0):
+        super().__init__(name, verbose)
+        self.pic = pic
+        self.bar = bar
+        self.clients = clients
+        self.productivity = productivity
+
+class Serveur(Employe):
+    async def prendre_commande(self):
+        while True:
+            cmd = await self.clients.commande()
+            if not cmd:
+                break
+            self.log("prêt pour prendre une nouvelle commande...")
+            self.log(f"j'ai la commande '{cmd}'")
+            self.log(f"j'écris sur le post-it '{cmd}'")
+            await self.pic.embrocher(cmd)
+            await asyncio.sleep(0)
+
+    async def servir(self):
+        while True:
+            commande = await self.bar.evacuer()
+            if commande is None:
+                break
+            self.log(f"j'apporte la commande '{commande}'")
+            for conso in commande:
+                self.log(f"je sers '{conso}'")
+                await asyncio.sleep(0.3 * self.productivity)
+            await asyncio.sleep(0)
+
+class Bariste(Employe):
+    async def preparer_et_servir(self):
+        while True:
+            cmd = await self.pic.liberer()
+            if cmd:
+                self.log(f"je commence la fabrication de '{cmd}'")
+                for conso in cmd:
+                    self.log(f"je prépare '{conso}'")
+                    await asyncio.sleep(0.4 * self.productivity)
+                await self.bar.recevoir(cmd)
+                self.log(f"la commande {cmd} est prête")
+            else:
+                commande = await self.bar.evacuer()
+                if commande is None:
+                    break
+                self.log(f"je sers directement '{commande}'")
+                for conso in commande:
+                    self.log(f"je prépare et sers '{conso}'")
+                    await asyncio.sleep(0.4 * self.productivity)
+            await asyncio.sleep(0)
+
+# -------------------- MAIN --------------------
+
+def usage():
+    print(f"usage: {sys.argv[0]} fichier")
+    sys.exit(1)
+
+async def main_async(fichier):
+    clients = Clients(fichier)
+
+    le_pic = Pic(name="le_pic", verbose=False)
+    le_bar = Bar(name="le_bar", verbose=False)
+
+    bob = Bariste(le_pic, le_bar, clients, name="bob", verbose=True, productivity=1.0)
+    alice = Serveur(le_pic, le_bar, clients, name="alice", verbose=True, productivity=1.0)
+    prosper = Serveur(le_pic, le_bar, clients, name="prosper", verbose=True, productivity=1.2)
+
+    # Concurrently prendre commandes et préparer/servir
+    await asyncio.gather(
+        alice.prendre_commande(),
+        prosper.prendre_commande(),
+        bob.preparer_et_servir()
+    )
+
+    # Ensuite, les serveurs servent les commandes restantes
+    await asyncio.gather(
+        alice.servir(),
+        prosper.servir()
+    )
+
+def main():
+    if len(sys.argv) != 2:
+        usage()
+    fichier = sys.argv[1]
+    asyncio.run(main_async(fichier))
 
 if __name__ == "__main__":
-
-    commandes = sys.argv[1:]
-    pic = Pic()
-    bar = Bar()
-    serveur = Serveur(pic, bar, commandes)
-    barman = Barman(pic, bar)
-    serveur.prendre_commande()
-    barman.preparer()
-    serveur.servir()
+    main()

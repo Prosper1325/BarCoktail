@@ -1,0 +1,20 @@
+0 mojito,piña colada,tequila sunrise
+1 margarita,cosmopolitan,caipirinha
+2 bloody mary,moscow mule,gin tonic
+3 cuba libre,sex on the beach,long island
+4 daiquiri,french 75,whiskey sour
+5 espresso martini,blue lagoon,paloma
+6 piña colada frozen,rum punch,sidecar
+7 negroni,amaretto sour,mint julep
+8 hurricane,planter's punch,harvey wallbanger
+9 gin fizz,brandy alexander,manhattan
+10 ti-punch,rum runner,blue hawaii
+11 screwdriver,cucaracha,tequila shot
+12 mojito royal,caïpirinha royale,champagne cocktail
+13 french love,greyhound,negroni royale
+14 mai tai,piña colada royal,gin tonic royal
+15 cuba libre frozen,long island frozen,sex on the beach royal
+16 espresso martini royal,blue lagoon royal,whiskey sour royal
+17 tequila sunrise frozen,margarita royal,cosmopolitan royal
+18 bloody mary royal,moscow mule royal,gin fizz royal
+19 hurricane royal,planter's punch royal,manhattan royal

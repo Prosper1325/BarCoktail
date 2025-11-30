@@ -1,85 +1,234 @@
-# BarCoktail
-BarCoktail est une petite simulation de bar écrite en Python(asyncrone) qui illustre la prise de commande, la préparation et le service de boissons en mélangeant threading et asyncio. Le script principal est BAR_ASYNCRO.py.
+"BarCoktail — Simulation asynchrone d’un bar"
+
+_ BarCoktail est une simulation pédagogique écrite en Python (asyncio) illustrant le fonctionnement d’un bar : prise de commandes, préparation des boissons, service, coordination entre employés et gestion concurrente des ressources.
+
+_ Le projet montre comment organiser plusieurs tâches coopérantes (producteurs/consommateurs) en utilisant des coroutines, des queues asynchrones, des verrous, et une boucle d’événements asyncio.
 
 Sommaire
-Description
-Fonctionnalités
-Prérequis
-Installation
-Utilisation
-Exemple d'exécution
-Architecture et conception
-Limites connues et améliorations proposées
-Contribution
-Licence
-Description
-Le projet simule le fonctionnement simplifié d'un bar : un Serveur prend des commandes (représentées par des post‑it), les empile sur un Pic, un Barman récupère les post‑it, prépare les boissons et les dépose sur un Bar, puis le Serveur sert les clients. Le but est pédagogique : montrer la coordination entre producteurs/consommateurs avec des primitives asynchrones et multi‑threads.
+
+-Description
+
+-Fonctionnalités
+
+-Prérequis
+
+-Installation
+
+-Utilisation
+
+-Exemples de fonctionnement
+
+-Architecture
+
+-Journalisation (logs)
+
+-Limites et améliorations possibles
+
+-Contribution
+
+
+ Description
+
+Le projet simule un petit bar organisé autour de :
+
+Serveurs qui prennent les commandes des clients et servent les consommations
+
+Un Bariste qui prépare les boissons à partir des post-it récupérés sur le Pic
+
+Un Bar où sont déposées les commandes prêtes
+
+Des Clients dont les commandes arrivent selon un timing défini dans un fichier texte
+
+Les interactions reposent sur :
+
+asyncio.Queue (gestion FIFO asynchrone)
+
+asyncio.Lock (verrous pour éviter qu’un serveur commence deux tâches en même temps)
+
+tâches concurrentes orchestrées via asyncio.gather
+
+Le tout est accompagné d’un système de logging écrivant toutes les actions dans un fichier.
 
 Fonctionnalités
-Prise de commande (Serveur)
-Empilement des commandes sur un Pic (pile LIFO)
-Préparation des boissons (Barman)
-Dépôt des boissons prêtes sur le Bar
-Service aux clients et encaissement
-Trois niveaux de verbosité pour afficher plus ou moins d'informations
-Journalisation basique des événements dans un fichier log
+✔ Gestion complète d’un flux de commandes
+
+prise de commande par un ou plusieurs serveurs
+
+empilement sur un Pic (file FIFO via asyncio.Queue)
+
+préparation par le Bariste
+
+dépôt au Bar
+
+service au client
+
+✔ Concurrence et coopération (asyncio)
+
+tâches asynchrones pour chaque employé
+
+file d’attente asynchrone
+
+verrou individuel pour empêcher qu’un serveur fasse 2 choses en même temps
+
+chaque employé possède une productivité variable (temps d’attente personnalisé)
+
+✔ Bariste polyvalent
+
+prépare les commandes du Pic
+
+mais peut aussi aller servir directement quand le Pic est vide ( objectif final du projet)
+
+✔ Plusieurs employés
+
+plusieurs serveurs peuvent travailler en parallèle ( Ici on s'est limité à deux serveurs )
+
+tout le monde partage les mêmes structures protégées
+
+✔ Journalisation
+
+toutes les actions sont enregistrées dans un fichier log horodaté
+
+affichage conditionné par un paramètre verbose
+
 Prérequis
-Python 3.8 ou supérieur
+
+Python 3.8+
+
 Aucune dépendance externe
-Installation
-Cloner le dépôt :
-Code
+
+📦 Installation
 git clone https://github.com/Prosper1325/BarCoktail.git
-Se placer dans le répertoire :
-Code
 cd BarCoktail
-(Optionnel) Créer un environnement virtuel :
-Code
-python3 -m venv venv
-source venv/bin/activate  # Linux / macOS
-venv\\Scripts\\activate   # Windows
+
+
+(Optionnel) environnement virtuel :
+
+python -m venv venv
+source venv/bin/activate      # Linux/macOS
+venv\Scripts\activate         # Windows
+
 Utilisation
-Le script principal s'appelle BAR_ASYNCRO.py et accepte les commandes (noms de boissons) en arguments de ligne de commande.
 
-Commande exemple :
+Le script principal est : BAR_ASYNCRO.py
 
-Code
-python3 BAR_ASYNCRO.py mojito margarita espresso
-Au démarrage, le programme demande le niveau de verbosité :
-
-1 : affichage minimal
-2 : affichage détaillé
-3 : affichage très verbeux (états internes)
-Exemple d'exécution
-Après avoir lancé la commande ci‑dessus et choisi la verbosité, le Serveur commencera à prendre les commandes (post‑it), le Barman préparera les boissons puis le Serveur servira les clients. Des messages sont affichés en console et un fichier de log est créé (nom généré avec la date/heure).
-
-Architecture et points importants du code
-Accessoire : classe de base contenant deux listes (liste, etat).
-Pic : pile LIFO pour empiler les post‑it (méthodes embrocher/liberer).
-Bar : zone de dépôt des boissons prêtes (méthodes recevoir/evacuer).
-Serveur : thread qui exécute un loop asyncio pour prendre les commandes et servir.
-Barman : thread qui exécute un loop asyncio pour préparer et encaisser.
+En effet pour comprendre chaque étape du projet il faut exécuter tous les codes par ordre; par exemple le script BAR_REFAIT1_2.py  est le code de la partie I n°2 du projet, BAR_REFAIT3_1.py est le code de la partie III n°1 du projet.
 
 
-Pour accéder au contenu du fichier log: Get-Content .\borabora.log -Wait ( commande windows)
+Il s’exécute avec un fichier listant des commandes clients :
+
+python BAR_ASYNCRO.py commandes.txt
+
+📄 Exemple de format du fichier clients
+3 mojito,bierre
+7 cappuccino
+12 mojito
+20 expresso,thé
 
 
-Remarques techniques :
+Chaque ligne :
 
-Le code mélange threading.Thread et asyncio (chaque thread lance son propre asyncio.run()).
-Certaines boucles utilisent du busy‑waiting (while ...: pass) ce qui peut consommer CPU.
-Les structures partagées (listes) ne sont pas protégées par des verrous, ce qui peut provoquer des conditions de course.
-Le fichier de log utilise un nom contenant la date/heure ; la chaîne actuelle peut contenir des caractères inattendus.
-Limites connues et améliorations proposées
-Remplacer les listes partagées par des structures thread‑safe (queue.Queue ou asyncio.Queue).
-Éviter le busy‑waiting en utilisant des primitives de synchronisation (Condition, Event, Queue).
-Centraliser l'utilisation d'un seul event loop asyncio, ou passer à une implémentation entièrement multi‑threads/puresynchronisation.
-Améliorer le format du nom du fichier de log et ajouter des rotations (RotatingFileHandler).
-Ajouter des tests unitaires et des exemples automatisés.
-Contribution
-Les contributions sont bienvenues. Pour contribuer :
+<seconde> <liste de consommations séparées par des virgules>
 
-Forkez le dépôt.
-Créez une branche feature/mon‑amelioration.
-Faites vos modifications et ajoutez des tests si possible.
-Ouvrez une pull request décrivant les changements.
+🎬 Exemples de fonctionnement
+
+Au lancement, les tâches suivantes s’exécutent en parallèle :
+
+Serveur 1 → prend une commande → la met sur le Pic → sert une commande prête
+
+Serveur 2 → travaille au même rythme, chacun avec un verrou interne
+
+Bariste → prépare les commandes → peut aller servir directement si le Pic est vide
+
+L’affichage dépend du mode verbose.
+
+Un fichier fichier_async.log est généré contenant tous les événements avec timestamps.
+
+Pour lire le fichier log en continu :
+
+Windows PowerShell
+Get-Content .\fichier_async.log -Wait -Tail 10
+
+
+Linux/macOS
+tail -f fichier_async.log
+
+🏗 Architecture
+Clients
+
+lit un fichier de commandes et génère les demandes selon un timer
+
+Pic (asyncio.Queue)
+
+reçoit les post-it (commandes brutes)
+
+file FIFO asynchrone
+
+Bar (asyncio.Queue)
+
+reçoit les boissons prêtes
+
+le serveur les récupère pour servir
+
+Serveur
+
+Tâches asynchrones :
+
+prendre_commande()
+
+servir()
+
+Caractéristiques :
+
+possède un asyncio.Lock interne
+
+productivité réglable (temps d’attente paramétrable)
+
+Bariste
+
+Tâches asynchrones :
+
+preparer()
+
+servir_directement() quand il n’y a plus de post-it
+
+Main
+
+création des queues asynchrones
+
+lancement de toutes les tâches via asyncio.gather
+
+gestion des logs
+
+📚 Journalisation (logs)
+
+fichier généré automatiquement avec date/heure
+
+encodage UTF-8
+
+chaque message comprend : employé, action, timestamp
+
+affichage console dépend de verbose
+
+⚠️ Limites et améliorations possibles
+
+le système pourrait intégrer une gestion d’arrêt propre (shutdown) des tâches
+
+la productivité pourrait être rendue dynamique (fatigue, surcharge…)
+
+possibilité d’ajouter une interface graphique (Tkinter / PySide / web)
+
+simulation plus réaliste (caisse, file de clients, priorités…)
+
+tests unitaires à ajouter
+
+🤝 Contribution
+
+Les contributions sont les bienvenues :
+
+Forkez le dépôt
+
+Créez une branche feature/ma-fonctionnalité
+
+Commit + push
+
+Ouvrez une pull request décrivant vos modifications
